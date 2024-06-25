@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="{% static 'main/css/ticket.css' %}">
+  <title>Бронювання місць у кінотеатрі</title>
+</head>
+<body>
+  <div class="movie-container">
+    <label for="session">Виберіть дату та час для {{ movie.title }}:</label>
+    <select id="session">
+      {% for seat in seats %}
+        <option value="{{ seat.id }}" {% if forloop.first %}selected{% endif %}>З {{ seat.date_start }} до {{ seat.date_end }} ({{ movie.price }} грн)</option>
+      {% endfor %}
+    </select>
+  </div>
+  <ul class="showcase">
+    <li>
+      <div class="seat"></div>
+      <small>Вільне</small>
+    </li>
+    <li>
+      <div class="seat selected"></div>
+      <small>Вибране</small>
+    </li>
+    <li>
+      <div class="seat sold"></div>
+      <small>Зайняте</small>
+    </li>
+  </ul>
+
+  <div class="container">
+    <div class="screen"></div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+        <div class="row">
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+            <div class="seat"></div>
+        </div>
+  </div>
+
+  <p class="text">
+    Ви вибрали <span id="count">0</span> місць на суму <span id="total">0.00</span> грн.
+  </p>
+  
+  <form action="{% url 'cinema:movie_reserve' movie.slug %}" method="post">
+      {% csrf_token %}
+      <label for="session">Виберіть сеанс:</label>
+      <select name="session_id" id="session">
+          {% for seat in seats %}
+          <option value="{{ seat.id }}">{{ seat.start_time }} - {{ seat.end_time }} ({{ movie.price }} грн)</option>
+          {% endfor %}
+      </select>
+
+      <h2>Виберіть місця:</h2>
+      <div class="container">
+          {% for seat in seats %}
+          <div class="row">
+              <input type="checkbox" id="seat{{ seat.id }}" name="seat_ids[]" value="{{ seat.id }}">
+              <label for="seat{{ seat.id }}">Місце {{ seat.seat_number }}</label>
+          </div>
+          {% endfor %}
+      </div>
+
+      <button type="submit">Забронювати</button>
+  </form>
+
+  <script src="{% static 'main/js/backend.js' %}"></script>
+</body>
+</html>
